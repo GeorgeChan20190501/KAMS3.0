@@ -1,21 +1,14 @@
 const mongoose = require('../utils/MongodbUtils')
-var Schema = mongoose.Schema
-const MenuSchema = new Schema({
-    id: {
-        type: String,
+
+const RoleSchma = new mongoose.Schema({
+    roleId: {
+        type: Number,
         required: true
     },
-    pid: {
-        type: String,
-        required: true
-    },
-    label: {
+    roleName: {
         type: String,
         required: true,
-    },
-    pageUrl: {
-        type: String,
-        default: ''
+        default: '普通用户'
     },
     flag: {
         type: Number,
@@ -25,10 +18,6 @@ const MenuSchema = new Schema({
         type: String,
         default: ''
     },
-    is_deleted: {
-        type: Number,
-        default: 0
-    },
     createTime: {
         type: Date,
         default: Date.now
@@ -36,9 +25,7 @@ const MenuSchema = new Schema({
     updateTime: {
         type: Date,
         default: Date.now
-    },
-    children: []
+    }
 })
 
-
-module.exports = mongoose.model('Menu', MenuSchema)
+module.exports = mongoose.model('Role', RoleSchma)

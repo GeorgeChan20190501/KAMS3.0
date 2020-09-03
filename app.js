@@ -2,8 +2,8 @@ const express = require('express')
 const app = express()
 const userController = require('./controller/UserController')
 const menuController = require('./controller/MenuController')
-
-
+const roleController = require('./controller/RoleController')
+const rightController = require('./controller/RightController')
 
 app.all("*", function(req, res, next) {
     //设置允许跨域的域名，*代表允许任意域名跨域
@@ -19,6 +19,8 @@ app.all("*", function(req, res, next) {
 })
 app.use(userController)
 app.use(menuController)
+app.use(roleController)
+app.use(rightController)
 app.listen(8082, function() {
     console.log('后台服务已成功启动!');
 })

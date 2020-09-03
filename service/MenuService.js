@@ -1,23 +1,5 @@
 const Menu = require('../models/Menu')
 
-
-
-function getNextId() {
-    return new Promise((resolve, reject) => {
-        Menu.find((e, data) => {
-            if (e) reject(e)
-            if (data != null && data.length == 0) {
-                resolve(10000)
-            } else {
-                console.log("=======")
-                console.log(data[0].menuId + 1)
-                console.log(typeof(data[0].menuId))
-                resolve(data[0].menuId + 1)
-            }
-        }).sort({ menuId: -1 }).limit(1)
-    })
-}
-
 /**
  * 查询菜单前1000
  * @author George
@@ -37,7 +19,7 @@ exports.findAllLimit1k = function() {
 exports.getMenuByName = function(menu) {
     return new Promise((resolve, reject) => {
         Menu.findOne({
-            menuName: menu.menuName
+            label: menu.label
         }, (e, data) => {
             if (e) reject(e)
             resolve(data)
@@ -60,7 +42,7 @@ function getMenuByName(menu) {
     console.log('getMenuByName 查询')
     return new Promise((resolve, reject) => {
         Menu.find({
-            menuName: menu.menuName
+            label: menu.label
         }, (e, data) => {
             if (e) reject(e)
             resolve(data)
@@ -70,18 +52,18 @@ function getMenuByName(menu) {
 
 
 exports.addMenu = async function(menu) {
-    var nextId = await getNextId();
 
-    var Menuname1 = await getMenuByName(menu);
-    console.log(Menuname1)
+    var label1 = await getMenuByName(menu);
+    console.log(label1)
     var ret = 1;
-    if (Menuname1 != null && Menuname1.length > 0) {
+    if (label1 != null && label1.length > 0) {
         ret = -1
         return ret
     }
     var newMenu = new Menu({
-        menuId: nextId,
-        menuName: menu.menuName,
+        id: menu.id,
+        pid: menu.pid,
+        label: menu.label,
         pageUrl: menu.pageUrl,
     })
     return new Promise((resolve, reject) => {
@@ -134,12 +116,14 @@ exports.updateOneMenu = function(menu) {
         Menu.updateOne({
             _id: menu._id
         }, {
-            menuName: menu.menuName,
-            pageUrl: menu.pageUrl,
-            describ: menu.describ,
-            is_deleted: menu.is_deleted,
-            updateTime: menu.updateTime,
-            children: menu.children
+            $set: {
+                label: menu.label,
+                pageUrl: menu.pageUrl,
+                describ: menu.describ,
+                is_deleted: menu.is_deleted,
+                updateTime: menu.updateTime,
+                children: menu.children
+            }
         }, e => {
             if (e) reject(e)
             resolve(1)

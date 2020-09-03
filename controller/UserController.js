@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const userController = express.Router()
 const UserService = require('../service/UserService')
 const UserTokenGenerate = require('../utils/UserTokenGenerate')
-
+const DateTimeUtils = require('../utils/DateTimeUtils')
 userController.use(bodyParser.urlencoded({ extended: true }))
 userController.use(bodyParser.json())
 
@@ -132,10 +132,10 @@ userController.post('/addUser', async function(req, res) {
 })
 
 userController.put('/updateUser', async function(req, res) {
-    var reqParam = req.query
+    var reqParam = req.body
     console.log('带token访问，验证token')
     console.log(reqParam)
-
+    console.log('===========')
     var token = req.headers.token
     var _id = reqParam._id
     if (!_id) {
@@ -147,34 +147,34 @@ userController.put('/updateUser', async function(req, res) {
         return
     }
 
-    if (!token) {
-        res.json({
-            err_code: 405,
-            message: '此接口必须携带token访问',
-            data: null
-        })
-        return
-    }
-    var data = await UserService.getUserByToken(token)
-    console.log(data)
-    var result = await UserTokenGenerate.checkToken(token).catch(e => {
-        res.json({
-            err_code: 404,
-            message: 'token失效或不存在',
-            token: token
-        })
-        return
-    })
+    // if (!token) {
+    //     res.json({
+    //         err_code: 405,
+    //         message: '此接口必须携带token访问',
+    //         data: null
+    //     })
+    //     return
+    // }
+    // var data = await UserService.getUserByToken(token)
+    // console.log(data)
+    // var result = await UserTokenGenerate.checkToken(token).catch(e => {
+    //     res.json({
+    //         err_code: 404,
+    //         message: 'token失效或不存在',
+    //         token: token
+    //     })
+    //     return
+    // })
 
-    console.log('result' + result)
-    if (data == null || data.token != token) {
-        res.json({
-            err_code: 404,
-            message: 'token失效或不存在1',
-            token: token
-        })
-        return
-    }
+    // console.log('result' + result)
+    // if (data == null || data.token != token) {
+    //     res.json({
+    //         err_code: 404,
+    //         message: 'token失效或不存在1',
+    //         token: token
+    //     })
+    //     return
+    // }
 
     console.log('带token访问，验证token')
     var ret = await UserService.updateOneUser(reqParam)
@@ -202,34 +202,34 @@ userController.delete('/deleteUser', async function(req, res) {
 
     console.log('带token访问，验证token')
 
-    if (!token) {
-        res.json({
-            err_code: 405,
-            message: '此接口必须携带token访问',
-            data: null
-        })
-        return
-    }
-    var data = await UserService.getUserByToken(token)
-    console.log(data)
-    var result = await UserTokenGenerate.checkToken(token).catch(e => {
-        res.json({
-            err_code: 404,
-            message: 'token失效或不存在',
-            token: token
-        })
-        return
-    })
+    // if (!token) {
+    //     res.json({
+    //         err_code: 405,
+    //         message: '此接口必须携带token访问',
+    //         data: null
+    //     })
+    //     return
+    // }
+    // var data = await UserService.getUserByToken(token)
+    // console.log(data)
+    // var result = await UserTokenGenerate.checkToken(token).catch(e => {
+    //     res.json({
+    //         err_code: 404,
+    //         message: 'token失效或不存在',
+    //         token: token
+    //     })
+    //     return
+    // })
 
-    console.log('result' + result)
-    if (data == null || data.token != token) {
-        res.json({
-            err_code: 404,
-            message: 'token失效或不存在1',
-            token: token
-        })
-        return
-    }
+    // console.log('result' + result)
+    // if (data == null || data.token != token) {
+    //     res.json({
+    //         err_code: 404,
+    //         message: 'token失效或不存在1',
+    //         token: token
+    //     })
+    //     return
+    // }
 
 
     var data = await UserService.getUserById(reqParam).catch(e => {
@@ -278,6 +278,62 @@ userController.get('/users', async function(req, res) {
     })
 })
 
+userController.get('/getUsers', async function(req, res) {
+    var reqParam = req.query
 
+    var ret = await UserService.getUserById(reqParam)
+    if (ret instanceof Error) {
+        res.json({
+            err_code: 500,
+            message: '服务器忙，稍后再试',
+            data: null
+        })
+    }
+    res.json({
+        err_code: 200,
+        message: '用户获取成功',
+        data: ret
+    })
+})
+
+userController.get('/getUser', async function(req, res) {
+    var reqParam = req.query
+
+    var ret = await UserService.getUserByAccount(reqParam)
+    if (ret instanceof Error) {
+        res.json({
+            err_code: 500,
+            message: '服务器忙，稍后再试',
+            data: null
+        })
+    }
+    var time = DateTimeUtils.stdDataTime(ret.createTime)
+    console.log("===" + time)
+    ret.createTime = time
+    res.json({
+        err_code: 200,
+        message: '用户获取成功',
+        data: ret
+    })
+})
+
+
+userController.get('/checkToken', async function(req, res) {
+    var reqParam = req.query
+
+    var ret = await UserService.checkToken(reqParam)
+    if (ret instanceof Error) {
+        res.json({
+            err_code: 500,
+            message: '服务器忙，稍后再试',
+            data: null
+        })
+    }
+    res.json({
+        err_code: 200,
+        message: '验证token成功',
+        data: ret
+    })
+})
 
 module.exports = userController

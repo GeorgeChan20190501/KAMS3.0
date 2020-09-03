@@ -3,55 +3,59 @@ const mongoose = require('../utils/MongodbUtils')
 const UserSchma = new mongoose.Schema({
     userId: {
         type: Number,
-        required:true
+        required: true
     },
     account: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
-    username:{
+    username: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
-    password:{
+    password: {
         type: String,
-        required:true 
+        required: true
     },
-    email:{
+    email: {
         type: String,
-        required:true,
+        required: true,
+    },
+    roleName: {
+        type: String,
+        default: '普通用户'
     },
     type: {
         type: Number,
         default: 0
     },
-    activeFlag:{
+    activeFlag: {
         type: String,
-        default:''
+        default: ''
     },
-    token:{
+    token: {
         type: String,
-        default:''
+        default: ''
     },
-    flag:{
+    flag: {
+        type: Boolean,
+        default: true
+    },
+    describ: {
         type: String,
-        default:'false'
+        default: ''
     },
-    describ:{
-        type: String,
-        default:''
+    createTime: {
+        type: Date,
+        default: Date.now
     },
-    createTime:{
-        type:Date,
-        default:Date.now
-    },
-    updateTime:{
-        type:Date,
-        default:Date.now
+    updateTime: {
+        type: Date,
+        default: Date.now
     }
-    
+
 
 })
 

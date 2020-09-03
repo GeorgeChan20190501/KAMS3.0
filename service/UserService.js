@@ -16,6 +16,7 @@ function getNextId() {
 
 
 exports.getUserById = function(user) {
+
     return new Promise((resolve, reject) => {
         User.findOne({
             _id: user._id
@@ -41,6 +42,18 @@ exports.getUserByAccount = function(user) {
     return new Promise((resolve, reject) => {
         User.findOne({
             account: user.account
+        }, (e, data) => {
+            if (e) reject(e)
+            resolve(data)
+        })
+    })
+}
+
+exports.checkToken = function(user) {
+    return new Promise((resolve, reject) => {
+        User.findOne({
+            account: user.account,
+            token: user.token
         }, (e, data) => {
             if (e) reject(e)
             resolve(data)
@@ -101,7 +114,9 @@ exports.updateOneUser = function(user) {
             _id: user._id
         }, {
             password: user.password,
-            email: user.email
+            email: user.email,
+            username: user.username,
+            roleName: user.roleName
         }, e => {
             if (e) reject(e)
             resolve(1)

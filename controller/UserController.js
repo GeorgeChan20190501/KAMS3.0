@@ -133,10 +133,8 @@ userController.post('/addUser', async function(req, res) {
 
 userController.put('/updateUser', async function(req, res) {
     var reqParam = req.body
-    console.log('带token访问，验证token')
     console.log(reqParam)
     console.log('===========')
-    var token = req.headers.token
     var _id = reqParam._id
     if (!_id) {
         res.json({
@@ -176,7 +174,6 @@ userController.put('/updateUser', async function(req, res) {
     //     return
     // }
 
-    console.log('带token访问，验证token')
     var ret = await UserService.updateOneUser(reqParam)
         //再次查询
     var data = await UserService.getUserById(reqParam)
@@ -332,6 +329,26 @@ userController.get('/checkToken', async function(req, res) {
     res.json({
         err_code: 200,
         message: '验证token成功',
+        data: ret
+    })
+})
+
+
+
+userController.get('/getUserGroup', async function(req, res) {
+    var reqParam = req.query
+
+    var ret = await UserService.getUserGroup(reqParam)
+    if (ret instanceof Error) {
+        res.json({
+            err_code: 500,
+            message: '服务器忙，稍后再试',
+            data: null
+        })
+    }
+    res.json({
+        err_code: 200,
+        message: '用户组获取成功',
         data: ret
     })
 })

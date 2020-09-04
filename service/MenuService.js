@@ -7,14 +7,18 @@ const Menu = require('../models/Menu')
  * @return {object} 异常e | 成功data
  * @version v1.0
  */
-exports.findAllLimit1k = function() {
+exports.findAllLimit1k = function(menu) {
+    console.log("参数=" + menu)
     return new Promise((resolve, reject) => {
-        Menu.find((e, data) => {
+        Menu.find({
+            label: { $regex: menu }
+        }, (e, data) => {
             if (e) reject(e)
             resolve(data)
         }).limit(1000)
     })
 }
+
 
 exports.getMenuByName = function(menu) {
     return new Promise((resolve, reject) => {

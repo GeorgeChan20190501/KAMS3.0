@@ -103,6 +103,26 @@ rightController.get('/rights', async function(req, res) {
 })
 
 
+rightController.get('/getmenusByUser', async function(req, res) {
+    var reqParam = req.query
+    console.log("=====获取用户组======")
+    console.log(reqParam)
+    var ret = await RightService.getmenusByUser(reqParam)
+    if (ret instanceof Error) {
+        res.json({
+            err_code: 500,
+            message: '服务器忙，稍后再试',
+            data: null
+        })
+    }
+    res.json({
+        err_code: 200,
+        message: '角色获取成功',
+        data: ret
+    })
+})
+
+
 
 
 rightController.put('/updateRight', async function(req, res) {

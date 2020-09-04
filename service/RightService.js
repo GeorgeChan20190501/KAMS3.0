@@ -30,6 +30,19 @@ exports.getRightByRoleId = function(right) {
     })
 }
 
+exports.getmenusByUser = function(user) {
+    return new Promise((resolve, reject) => {
+        Right.findOne({
+            roleName: user.roleName
+        }, (e, data) => {
+            if (e) reject(e)
+            resolve(data)
+        })
+    })
+}
+
+
+
 exports.getRight = function() {
     return new Promise((resolve, reject) => {
         Right.find((e, data) => {
@@ -38,6 +51,8 @@ exports.getRight = function() {
         })
     })
 }
+
+
 
 
 function getRightByRoleId(right) {

@@ -18,7 +18,7 @@ menuController.get('/test', function(req, res) {
 
 menuController.post('/addMenu', async function(req, res) {
     var reqParam = req.body
-
+    console.log(reqParam)
     var ret = await MenuService.addMenu(reqParam)
     var data = await MenuService.getMenuByName(reqParam)
     console.log(ret)
@@ -48,12 +48,14 @@ menuController.post('/addMenu', async function(req, res) {
 })
 
 menuController.put('/updateMenu', async function(req, res) {
-    var reqParam = req.query
+    var reqParam = req.body
+
+    console.log("====更新菜单参数===")
     console.log(reqParam)
 
-    console.log("=======")
+    console.log("====SSSS===")
 
-    var children = JSON.parse(reqParam.children)
+    var children = reqParam.children
 
     console.log("=======")
     console.log(children)
@@ -142,7 +144,9 @@ menuController.delete('/deleteMenu', async function(req, res) {
 
 
 menuController.get('/menus', async function(req, res) {
-    var ret = await MenuService.findAllLimit1k()
+    var reqParam = req.query.param
+    console.log(reqParam)
+    var ret = await MenuService.findAllLimit1k(reqParam)
     if (ret instanceof Error) {
         res.json({
             err_code: 500,
@@ -156,5 +160,6 @@ menuController.get('/menus', async function(req, res) {
         data: ret
     })
 })
+
 
 module.exports = menuController

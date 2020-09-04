@@ -49,6 +49,19 @@ exports.getUserByAccount = function(user) {
     })
 }
 
+exports.getUserGroup = function(user) {
+    return new Promise((resolve, reject) => {
+        User.findOne({
+            account: user.account
+        }, (e, data) => {
+            if (e) reject(e)
+            resolve(data)
+        })
+    })
+}
+
+
+
 exports.checkToken = function(user) {
     return new Promise((resolve, reject) => {
         User.findOne({
